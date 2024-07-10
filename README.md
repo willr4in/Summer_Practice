@@ -25,7 +25,7 @@ Adding Conditional Control to Text-to-Image Diffusion Models Lvmin Zhang, Anyi R
 ### Описание исследуемых моделей
 Немного о ControlNet
 	ControlNet - это архитектура нейронной сети, которая улучшает предварительно обученные модели диффузии изображений для конкретных задач. Она работает путем изменения входных условий блоков нейронной сети, которые представляют собой наборы нейронных слоев, используемых для построения нейронных сетей. Это позволяет сохранить исходные веса, избегая изменений из-за небольших наборов данных, и ускоряет файнтюнинг. ControlNet использует слои "нулевой свертки" для соединения компонентов с весами и смещениями, инициализированными нулями, чтобы не влиять на объекты на первом этапе обучения. Градиенты для этих слоев могут быть рассчитаны с использованием уравнений произведения Адамара, что позволяет начать обучение без перезапуска при введении новых данных или задач. ControlNet часто применяется к Stable Diffusion для преобразования текста в изображение, где входные данные сначала кодируются в свернутые карты перед подключением через структуру ControlNet в кодер/декодер. На рисунке 1 мы можем видеть более наглядный пример архитектуры ControlNet.
-
+![](https://www.google.com/url?sa=i&url=https%3A%2F%2Fhabr.com%2Fru%2Fcompanies%2Fruvds%2Farticles%2F719348%2F&psig=AOvVaw0A8EnoI2ULjcNlJ7exZznS&ust=1720729220771000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCPjHp4GmnYcDFQAAAAAdAAAAABAE)
 Обучение нейронной сети можно ускорить, используя частичное отключение связей между управляющей сетью и стабильной диффузией в случаях ограниченных вычислительных ресурсов. При наличии мощных вычислительных кластеров можно обучать модель на больших объемах данных. Можно начать с обучения управляющих сетей на большом числе итераций, прежде чем разблокировать все веса стабильной диффузии и обучать их вместе как одну модель для конкретной задачи. Это подход способствует более точному управлению распространением изображений и может улучшить смежные приложения, такие как обнаружение четких границ на изображениях с использованием случайных пороговых значений.
 Для генерации всегда нужна картинка — она выступает как трафарет. Из-за наличия такой «базы» решаются проблемы нейросетей с генерацией групп людей, рук, глаз и других мелких деталей. 
 Данные и экспериментальные настройки
@@ -40,18 +40,22 @@ Adding Conditional Control to Text-to-Image Diffusion Models Lvmin Zhang, Anyi R
 Примеры работы Stable Diffision ControlNet:
 
 
-![](https://github.com/willr4in/Summer_Practice/blob/main/photos/PhotosControlNet/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%B0%20%D0%B4%D1%80%D1%83%D0%B7%D0%B5%D0%B9,%20%D0%BF%D0%BB%D0%B0%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D1%85%20%D0%B2%20%D0%BE%D0%B7%D0%B5%D1%80%D0%B5%20%D0%B8%D0%BB%D0%B8%20%D0%B1%D0%B0%D1%81%D1%81%D0%B5%D0%B9%D0%BD%D0%B5%20%D0%BF%D0%B8%D0%BA%D1%81%D0%B5%D0%BB%D1%8C%20%D0%B0%D1%80%D1%82.jpg?raw=true)
+![]((https://github.com/willr4in/Summer_Practice/assets/113304679/7c6bc5f8-6f14-49cf-9784-fc22fff991ed)
 
 
-![](https://github.com/willr4in/Summer_Practice/blob/main/photos/PhotosControlNet/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%B0%20%D0%B4%D1%80%D1%83%D0%B7%D0%B5%D0%B9,%20%D0%BF%D1%80%D1%8B%D0%B3%D0%B0%D1%8E%D1%89%D0%B8%D1%85%20%D0%B2%20%D0%B2%D0%BE%D0%B7%D0%B4%D1%83%D1%85%D0%B5%20%D0%BD%D0%B0%20%D1%84%D0%BE%D0%BD%D0%B5%20%D0%B7%D0%B0%D0%BA%D0%B0%D1%82%D0%B0%20%D0%B0%D0%BD%D0%B8%D0%BC%D0%B5.jpg?raw=true)
+![](https://github.com/willr4in/Summer_Practice/blob/main/photos/PhotosControlNet/%D0%9C%D0%B0%D0%BA%D1%80%D0%BE%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F%20%D1%86%D0%B2%D0%B5%D1%82%D1%83%D1%89%D0%B5%D0%B3%D0%BE%20%D1%86%D0%B2%D0%B5%D1%82%D0%BA%D0%B0%20%D1%81%20%D0%BF%D1%87%D0%B5%D0%BB%D0%BE%D0%B9%20%D0%BD%D0%B0%20%D0%BD%D0%B5%D0%BC%20%D0%BA%D0%B8%D0%B1%D0%B5%D1%80%D0%BF%D0%B0%D0%BD%D0%BA.jpg?raw=true)
 
 
 
 Примеры работы Kandinskiy с ControlNet:
 
 
-![](https://github.com/willr4in/Summer_Practice/blob/main/photos/PhotosKandinsky/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%B0%20%D0%B4%D1%80%D1%83%D0%B7%D0%B5%D0%B9,%20%D0%BF%D0%BB%D0%B0%D0%B2%D0%B0%D1%8E%D1%89%D0%B8%D1%85%20%D0%B2%20%D0%BE%D0%B7%D0%B5%D1%80%D0%B5%20%D0%B8%D0%BB%D0%B8%20%D0%B1%D0%B0%D1%81%D1%81%D0%B5%D0%B9%D0%BD%D0%B5%20%D0%BF%D0%B8%D0%BA%D1%81%D0%B5%D0%BB%D1%8C%20%D0%B0%D1%80%D1%82.png?raw=true)
-![](https://github.com/willr4in/Summer_Practice/blob/main/photos/PhotosKandinsky/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%B0%20%D0%B4%D1%80%D1%83%D0%B7%D0%B5%D0%B9,%20%D0%BF%D1%80%D1%8B%D0%B3%D0%B0%D1%8E%D1%89%D0%B8%D1%85%20%D0%B2%20%D0%B2%D0%BE%D0%B7%D0%B4%D1%83%D1%85%D0%B5%20%D0%BD%D0%B0%20%D1%84%D0%BE%D0%BD%D0%B5%20%D0%B7%D0%B0%D0%BA%D0%B0%D1%82%D0%B0%20%D0%B0%D0%BD%D0%B8%D0%BC%D0%B5.png?raw=true)
+
+![](https://github.com/willr4in/Summer_Practice/blob/main/photos/PhotosKandinsky/%D0%9F%D0%B0%D1%80%D0%B0,%20%D1%86%D0%B5%D0%BB%D1%83%D1%8E%D1%89%D0%B0%D1%8F%D1%81%D1%8F%20%D0%BF%D0%BE%D0%B4%20%D0%B7%D0%BE%D0%BD%D1%82%D0%B8%D0%BA%D0%BE%D0%BC%20%D0%B2%D0%BE%20%D0%B2%D1%80%D0%B5%D0%BC%D1%8F%20%D0%B4%D0%BE%D0%B6%D0%B4%D1%8F%20%D0%BA%D0%B8%D0%B1%D0%B5%D1%80%D0%BF%D0%B0%D0%BD%D0%BA.png?raw=true)
+
+
+![](https://github.com/willr4in/Summer_Practice/blob/main/photos/PhotosKandinsky/%D0%9C%D0%B0%D0%BA%D1%80%D0%BE%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F%20%D1%86%D0%B2%D0%B5%D1%82%D1%83%D1%89%D0%B5%D0%B3%D0%BE%20%D1%86%D0%B2%D0%B5%D1%82%D0%BA%D0%B0%20%D1%81%20%D0%BF%D1%87%D0%B5%D0%BB%D0%BE%D0%B9%20%D0%BD%D0%B0%20%D0%BD%D0%B5%D0%BC%20%D0%BA%D0%B8%D0%B1%D0%B5%D1%80%D0%BF%D0%B0%D0%BD%D0%BA.png?raw=true)
+
 ### Сравнительный анализ
 
 ## 5. Обсуждение
